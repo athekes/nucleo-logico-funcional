@@ -1,2 +1,0 @@
-class Triva < ApplicationRecord
-end

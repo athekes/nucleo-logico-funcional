@@ -2,8 +2,8 @@
 
 one:
   body: MyString
-  trivia: one
+  questionaire: one
 
 two:
   body: MyString
-  trivia: two
+  questionaire: two
