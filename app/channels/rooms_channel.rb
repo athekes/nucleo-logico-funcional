@@ -18,7 +18,6 @@ class RoomsChannel < ApplicationCable::Channel
   def init_game(data)
     room = Room.find(params[:id])
 
-    #dando broadcast na perguntas e nas alternativas
     room.update(state: :asking_questions, current_question: room.questions.first)
     state = {
       room: room.code,
@@ -26,21 +25,20 @@ class RoomsChannel < ApplicationCable::Channel
     }.to_json
     RoomsChannel.broadcast_to(room, state)
 
-
     room.questionaire.questions.each do |question|
       #dando broadcast na perguntas e nas alternativas
       question = {
-        question: question.question.first.text,
-        alternatives: question.question.first.alternatives
+        question: question.body,
+        alternatives: 'alternatives'
       }.to_json
       RoomsChannel.broadcast_to(room, question)
 
       # esperando o tempo para as respostas
-      sleep(1.minute)
+      sleep(10.seconds)
 
       # mostrando o placar parcial
       scoreboard = room.last_scoreboard.to_json
-      RoomsChannel.broadcast_to(room, question)
+      RoomsChannel.broadcast_to(room, scoreboard)
 
       room.update(state: :asking_questions, current_question: room.current_question.next_question) if room.current_question.next_question.present?
     end
