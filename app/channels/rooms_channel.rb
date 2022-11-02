@@ -4,16 +4,7 @@ class RoomsChannel < ApplicationCable::Channel
     stream_for room
 
     RoomsChannel.broadcast_to(room, "Conectado na sala: #{room.state}")
-
-    #1 esperando inicio
-
-    #2 Ler pergunta e esperando resposta
-
-    #3 mostrando parcial
-
-    #4 mostrando final
   end
-
 
   def init_game(data)
     room = Room.find(params[:id])
@@ -25,31 +16,34 @@ class RoomsChannel < ApplicationCable::Channel
     }.to_json
     RoomsChannel.broadcast_to(room, state)
 
-    room.questionaire.questions.each do |question|
-      #dando broadcast na perguntas e nas alternativas
-      question = {
-        question: question.body,
-        alternatives: 'alternatives'
-      }.to_json
-      RoomsChannel.broadcast_to(room, question)
+    go_to_next_question(room)
+  end
 
-      # esperando o tempo para as respostas
-      sleep(10.seconds)
+  # def go_to_next_question(data)
+  #   room = Room.find(params[:id])
 
-      # mostrando o placar parcial
-      scoreboard = room.last_scoreboard.to_json
-      RoomsChannel.broadcast_to(room, scoreboard)
+  #   if room.next_question?
+  #     room.update(current_question: room.current_question.next_question)
 
-      room.update(state: :asking_questions, current_question: room.current_question.next_question) if room.current_question.next_question.present?
-    end
+  #     #dando broadcast na perguntas e nas alternativas
+  #     question = {
+  #       question: room.current_question,
+  #       alternatives: room.current_question.alternatives
+  #     }.to_json
+  #     RoomsChannel.broadcast_to(room, question)
+  #   else
+  #     # quando o chegar no final atualiza o status e mostra o score board
+  #     room.update(state: :ending, current_question: nil)
+  #     state = {
+  #       room: room.code,
+  #       state: room.state
+  #     }.to_json
+  #     RoomsChannel.broadcast_to(room, state)
+  #   end
+  # end
 
-    # quando o chegar no final atualiza o status e mostra o score board
-    room.update(state: :ending, current_question: nil)
-    state = {
-      room: room.code,
-      state: room.state
-    }.to_json
-    RoomsChannel.broadcast_to(room, state)
+  def show_current_scoreboard(data)
+    room = Room.find(params[:id])
 
     scoreboard = room.last_scoreboard.to_json
     RoomsChannel.broadcast_to(room, question)
@@ -64,9 +58,50 @@ class RoomsChannel < ApplicationCable::Channel
     # registra uma pergunta e retorna para o user
     room.current_question.answers.create(user: user, answer: data['aswer'])
     RoomsChannel.broadcast_to(user, { message: 'Aswer registred' }.to_json)
+
+    if all_have_answered?
+      go_to_next_question
+    end
   end
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
+    room.connected_users.delete(user)
+  end
+
+  private 
+
+  def all_have_answered?
+    answers = []
+    room.connected_users.each do |user|
+      answers << true if user_answered?(user, rom.current_question)
+    end
+
+    room.connected_users.count == answers.count
+  end
+
+  def connected_users
+    ActionCable.server.connections.select { |con| con.current_room == room }
+  end
+
+  def go_to_next_question(room)
+    if room.next_question
+      room.update(current_question: room.current_question.next_question)
+
+      #dando broadcast na perguntas e nas alternativas
+      question = {
+        question: room.current_question,
+        alternatives: room.current_question.alternatives
+      }.to_json
+      RoomsChannel.broadcast_to(room, question)
+    else
+      # quando o chegar no final atualiza o status e mostra o score board
+      room.update(state: :ending, current_question: nil)
+      state = {
+        room: room.code,
+        state: room.state
+      }.to_json
+      RoomsChannel.broadcast_to(room, state)
+    end
   end
 end

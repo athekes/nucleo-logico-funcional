@@ -10,4 +10,11 @@ class Room < ApplicationRecord
   def questions
     questionaire.questions
   end
+
+  def next_question
+    current_question.next_question
+  end
+
+  def last_scoreboard
+  end
 end
