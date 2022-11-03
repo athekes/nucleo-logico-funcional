@@ -3,6 +3,9 @@ class Room < ApplicationRecord
   belongs_to :questionaire
   belongs_to :current_question, class_name: 'Question', foreign_key: 'current_question_id', optional: true 
 
+  def users_connected
+  end
+
   def last_scoreboard
     p 'Placar'
   end
@@ -16,5 +19,14 @@ class Room < ApplicationRecord
   end
 
   def last_scoreboard
+    scoreboard = {}
+
+    users_connected = User.all
+
+    users_connected.each do |user|
+      scoreboard[user.name] = user.answers.where(room: self).select {|answer| answer.correct? }.count
+    end
+
+    scoreboard
   end
 end

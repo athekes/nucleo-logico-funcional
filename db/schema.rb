@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_02_184658) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_03_185744) do
   create_table "alternatives", force: :cascade do |t|
     t.string "body"
     t.integer "question_id", null: false
@@ -20,6 +20,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_02_184658) do
     t.integer "type"
     t.integer "position"
     t.index ["question_id"], name: "index_alternatives_on_question_id"
+  end
+
+  create_table "answers", force: :cascade do |t|
+    t.integer "room_id", null: false
+    t.integer "question_id", null: false
+    t.integer "alternative_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alternative_id"], name: "index_answers_on_alternative_id"
+    t.index ["question_id"], name: "index_answers_on_question_id"
+    t.index ["room_id"], name: "index_answers_on_room_id"
+    t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -62,6 +75,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_02_184658) do
   end
 
   add_foreign_key "alternatives", "questions"
+  add_foreign_key "answers", "alternatives"
+  add_foreign_key "answers", "questions"
+  add_foreign_key "answers", "rooms"
+  add_foreign_key "answers", "users"
   add_foreign_key "questions", "questionaires"
   add_foreign_key "questions", "rooms", column: "previous_question_id"
   add_foreign_key "rooms", "questionaires"
