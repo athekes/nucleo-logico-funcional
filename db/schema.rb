@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_03_185744) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_03_193725) do
   create_table "alternatives", force: :cascade do |t|
     t.string "body"
     t.integer "question_id", null: false
@@ -72,6 +72,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_03_185744) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "room_id"
+    t.index ["room_id"], name: "index_users_on_room_id"
   end
 
   add_foreign_key "alternatives", "questions"
@@ -83,4 +85,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_03_185744) do
   add_foreign_key "questions", "rooms", column: "previous_question_id"
   add_foreign_key "rooms", "questionaires"
   add_foreign_key "rooms", "questions", column: "current_question_id"
+  add_foreign_key "users", "rooms"
 end
