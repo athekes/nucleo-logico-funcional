@@ -20,7 +20,12 @@ class RoomsChannel < ApplicationCable::Channel
     }.to_json
     RoomsChannel.broadcast_to(room, state)
 
-    go_to_next_question(room)
+    #dando broadcast na perguntas e nas alternativas
+    question = {
+      question: room.current_question,
+      alternatives: room.current_question.alternatives
+    }.to_json
+    RoomsChannel.broadcast_to(room, question)
   end
 
   def show_current_scoreboard(data)
@@ -32,17 +37,16 @@ class RoomsChannel < ApplicationCable::Channel
 
   def register_answer(data)
     room = Room.find(params[:id])
-    user = user.find(data["user_id"])
+    user = User.find(params[:user_id])
+    alternative = Alternative.find(data['alternative_id']) 
 
-    return if not room.asking_questions?
+    return unless room.asking_questions?
 
     # registra uma pergunta e retorna para o user
-    room.current_question.answers.create(user: user, answer: data['aswer'])
-    RoomsChannel.broadcast_to(user, { message: 'Aswer registred' }.to_json)
+    user.answers.create(room: room, question: room.current_question, alternative: alternative)
+    RoomsChannel.broadcast_to(room, { message: 'Aswer registred' }.to_json)
 
-    if all_have_answered?
-      go_to_next_question
-    end
+    # go_to_next_question(room)
   end
 
   def unsubscribed
