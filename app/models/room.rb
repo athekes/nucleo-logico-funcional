@@ -22,4 +22,22 @@ class Room < ApplicationRecord
 
     scoreboard
   end
+
+  def all_answers
+    Answer.where(room: self, user: connected_users)
+  end
+
+  def current_question_answers
+    all_answers.where(question: current_question)
+  end
+
+  def current_question_all_answered?
+    connected_users.each do |user|
+      user_answers_count = current_question_answers.where(user: user).count
+
+      return false if user_answers_count < 1
+    end
+
+    return true
+  end
 end

@@ -46,27 +46,17 @@ class RoomsChannel < ApplicationCable::Channel
     user.answers.create(room: room, question: room.current_question, alternative: alternative)
     RoomsChannel.broadcast_to(room, { message: 'Aswer registred' }.to_json)
 
-
-    # go_to_next_question(room)
+    if room.current_question_all_answered?
+      go_to_next_question(room)
+    end
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
     user = connection.connected_user
-
     user.disconnect_from_room
   end
 
-  private 
-
-  def all_have_answered?
-    answers = []
-    room.connected_users.each do |user|
-      answers << true if user_answered?(user, rom.current_question)
-    end
-
-    room.connected_users.count == answers.count
-  end
+  private
 
   def go_to_next_question(room)
     if room.next_question
