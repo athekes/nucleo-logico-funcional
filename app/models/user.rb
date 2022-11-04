@@ -7,7 +7,7 @@ class User < ApplicationRecord
     self.update(connected_room: room)
   end
 
-  def disconnect
+  def disconnect_from_room
     self.update(connected_room: nil)
   end
 end

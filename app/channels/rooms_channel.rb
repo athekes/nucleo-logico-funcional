@@ -5,7 +5,7 @@ class RoomsChannel < ApplicationCable::Channel
 
     stream_for room
 
-    room.connect(user)
+    user.connect_to(room)
 
     RoomsChannel.broadcast_to(room, "Conectado na sala: #{room.state}")
   end
@@ -46,12 +46,15 @@ class RoomsChannel < ApplicationCable::Channel
     user.answers.create(room: room, question: room.current_question, alternative: alternative)
     RoomsChannel.broadcast_to(room, { message: 'Aswer registred' }.to_json)
 
+
     # go_to_next_question(room)
   end
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
-    # room.disconnect(user)
+    user = connection.connected_user
+
+    user.disconnect_from_room
   end
 
   private 
@@ -63,10 +66,6 @@ class RoomsChannel < ApplicationCable::Channel
     end
 
     room.connected_users.count == answers.count
-  end
-
-  def connected_users
-    ActionCable.server.connections.select { |con| con.current_room == room }
   end
 
   def go_to_next_question(room)

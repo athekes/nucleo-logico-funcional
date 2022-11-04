@@ -5,14 +5,6 @@ class Room < ApplicationRecord
 
   has_many :connected_users, class_name: 'User', inverse_of: :connected_room, foreign_key: 'room_id'
 
-  def connect(user)
-    user.connect_to(self)
-  end
-
-  def disconnect(user)
-    user.disconnect
-  end
-
   def questions
     questionaire.questions
   end
