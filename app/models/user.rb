@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   belongs_to :connected_room, class_name: 'Room', foreign_key: 'room_id', optional: true
 
+  validates :token, presence: true
+
   def connect_to(room)
     self.update(connected_room: room)
   end
