@@ -10,23 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_10_144659) do
-  create_table "alternatives", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2022_11_03_193725) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
+
+  create_table "alternatives", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "body"
-    t.integer "question_id", null: false
+    t.uuid "question_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "correct"
-    t.integer "type"
     t.integer "position"
     t.index ["question_id"], name: "index_alternatives_on_question_id"
   end
 
-  create_table "answers", force: :cascade do |t|
-    t.integer "room_id", null: false
-    t.integer "question_id", null: false
-    t.integer "alternative_id", null: false
-    t.integer "user_id", null: false
+  create_table "answers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "room_id", null: false
+    t.uuid "question_id", null: false
+    t.uuid "alternative_id", null: false
+    t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["alternative_id"], name: "index_answers_on_alternative_id"
@@ -35,45 +38,38 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_10_144659) do
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
-  create_table "messages", force: :cascade do |t|
-    t.string "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "questionaires", force: :cascade do |t|
+  create_table "questionaires", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "questions", force: :cascade do |t|
+  create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "body"
-    t.integer "questionaire_id", null: false
+    t.uuid "questionaire_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "previous_question_id"
+    t.uuid "previous_question_id"
     t.index ["previous_question_id"], name: "index_questions_on_previous_question_id"
     t.index ["questionaire_id"], name: "index_questions_on_questionaire_id"
   end
 
-  create_table "rooms", force: :cascade do |t|
+  create_table "rooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "state", default: 0
-    t.integer "questionaire_id"
-    t.integer "current_question_id"
+    t.uuid "questionaire_id"
+    t.uuid "current_question_id"
     t.index ["current_question_id"], name: "index_rooms_on_current_question_id"
     t.index ["questionaire_id"], name: "index_rooms_on_questionaire_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "room_id"
-    t.string "token"
+    t.uuid "room_id"
     t.index ["room_id"], name: "index_users_on_room_id"
   end
 
