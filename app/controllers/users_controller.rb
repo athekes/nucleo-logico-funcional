@@ -17,10 +17,9 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
-    @user.token = Secure::Token.generete_for(@user)
 
     if @user.save
-      render json: {name: @user.name, token: @user.token}, status: :created, location: @user
+      render json: @user, status: :created, location: @user
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -40,11 +39,11 @@ class UsersController < ApplicationController
     @user.destroy
   end
 
-  def login
-    cookies[:user_id] = params[:user_id]
+  # def login
+  #   cookies[:user_id] = params[:user_id]
 
-    render json: cookies[:user_id]
-  end
+  #   render json: cookies[:user_id]
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,11 +1,10 @@
 class RoomsChannel < ApplicationCable::Channel
   def subscribed
-    room = Room.find(params[:id])
-    user = User.find(params[:user_id])
+    room = Room.find(params[:room_id])
 
     stream_for room
 
-    current_game.enter_room(user: user)
+    current_game.enter_room(user: connection.connected_user)
   end
 
   def init_game(data)
@@ -17,10 +16,9 @@ class RoomsChannel < ApplicationCable::Channel
   end
 
   def register_answer(data)
-    user = User.find(params[:user_id])
-    alternative = Alternative.find(data['alternative_id']) 
+    alternative = Alternative.find(data['alternative_id'])
 
-    current_game.register_answer(user: user, alternative: alternative)
+    current_game.register_answer(user: connection.connected_user, alternative: alternative)
   end
 
   def unsubscribed
@@ -32,7 +30,7 @@ class RoomsChannel < ApplicationCable::Channel
   private
 
   def current_game
-    room = Room.find(params[:id])
+    room = Room.find(params[:room_id])
     Game::Quizz.new(room: room)
   end
 end
