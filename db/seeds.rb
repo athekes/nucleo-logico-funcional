@@ -6,9 +6,6 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-
-User.create!(name:"User1")
-
 questionaire = Questionaire.create!(title: "Questionaire1")
 
 question = Question.create!(body: "Question1", questionaire: questionaire)
@@ -17,3 +14,6 @@ Alternative.create!(body: "alternative1", correct: true, position: 0, question: 
 Alternative.create!(body: "alternative2", correct: false, position: 1, question: question)
 Alternative.create!(body: "alternative3", correct: false, position: 2, question: question)
 Alternative.create!(body: "alternative4", correct: false, position: 3, question: question)
+
+
+Room.create(code: 'jacaré', questionaire: questionaire)
