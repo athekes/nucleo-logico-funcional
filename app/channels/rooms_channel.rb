@@ -2,7 +2,7 @@ class RoomsChannel < ApplicationCable::Channel
   def subscribed
     room = Room.find(params[:room_id])
 
-    stream_for room
+    stream_for @room
 
     current_game.enter_room(user: connection.connected_user)
   end
@@ -30,7 +30,7 @@ class RoomsChannel < ApplicationCable::Channel
   private
 
   def current_game
-    room = Room.find(params[:room_id])
-    Game::Quizz.new(room: room)
+    @room = Room.find(params[:room_id])
+    Game::Quizz.new(room: @room)
   end
 end

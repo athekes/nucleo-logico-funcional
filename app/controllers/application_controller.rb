@@ -6,9 +6,10 @@ class ApplicationController < ActionController::API
   private
 
   def authorize_request
-    token = request.headers['AuthorizationToken']
-
-    @current_user = User.find_by(token: token)
-    render json: { message: "user not found" }, status: :unauthorized if @current_user.blank?
+    if @current_user = User.find(cookies[:user_uuid])
+      user
+    else
+      render json: { message: "user not found" }, status: :unauthorized if @current_user.blank?
+    end
   end
 end
