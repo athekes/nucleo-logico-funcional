@@ -20,7 +20,9 @@ class Game::Quizz
     user.disconnect_from_room
   end
 
-  def init_game
+  def init_game(user:)
+    return if user != room.owner
+
     room.update!(state: :asking_questions, current_question: room.questions.first)
 
     broadcaster.send({
@@ -71,7 +73,7 @@ class Game::Quizz
     })
   end
 
-  def end_game  
+  def end_game
     room.update(state: :ending, current_question: nil)
 
     broadcaster.send({

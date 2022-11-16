@@ -8,7 +8,7 @@ class RoomsChannel < ApplicationCable::Channel
   end
 
   def init_game(data)
-    current_game.init_game
+    current_game.init_game(user: connection.connected_user)
   end
 
   def show_current_scoreboard(data)
