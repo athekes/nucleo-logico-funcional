@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_03_193725) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_16_115449) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -61,7 +61,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_03_193725) do
     t.integer "state", default: 0
     t.uuid "questionaire_id"
     t.uuid "current_question_id"
+    t.uuid "owner_id", null: false
     t.index ["current_question_id"], name: "index_rooms_on_current_question_id"
+    t.index ["owner_id"], name: "index_rooms_on_owner_id"
     t.index ["questionaire_id"], name: "index_rooms_on_questionaire_id"
   end
 
@@ -82,5 +84,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_03_193725) do
   add_foreign_key "questions", "rooms", column: "previous_question_id"
   add_foreign_key "rooms", "questionaires"
   add_foreign_key "rooms", "questions", column: "current_question_id"
+  add_foreign_key "rooms", "users", column: "owner_id"
   add_foreign_key "users", "rooms"
 end
