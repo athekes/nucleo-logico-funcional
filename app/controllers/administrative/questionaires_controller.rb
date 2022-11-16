@@ -1,4 +1,4 @@
-class QuestionairesController < ApplicationController
+class Administrative::QuestionairesController < AdministrativeController
   before_action :set_questionaire, only: %i[ show update destroy ]
 
   # GET /questionaires
@@ -39,13 +39,14 @@ class QuestionairesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_questionaire
-      @questionaire = Questionaire.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def questionaire_params
-      params.fetch(:questionaire, {}).permit!
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_questionaire
+    @questionaire = Questionaire.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def questionaire_params
+    params.fetch(:questionaire, {}).permit!
+  end
 end

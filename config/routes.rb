@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
-  resources :questionaires
-  resources :questions
+  namespace :administrative do
+    resources :questionaires
+    resources :questions
+    resources :alternatives
+  end
+
   resources :rooms
-  resources :users  
-  resources :messages
+  resources :users
   resources :rooms
 
   mount ActionCable.server => '/cable'

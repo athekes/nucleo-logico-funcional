@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
-    
+
     if @user.save
       cookies[:user_uuid] = @user.id
 
@@ -41,20 +41,15 @@ class UsersController < ApplicationController
     @user.destroy
   end
 
-  # def login
-  #   cookies[:user_id] = params[:user_id]
-
-  #   render json: cookies[:user_id]
-  # end
-
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.fetch(:user, {}).permit!
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def user_params
+    params.fetch(:user, {}).permit!
+  end
 end
