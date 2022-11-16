@@ -15,6 +15,3 @@ Alternative.create!(body: "alternative2", correct: false, position: 1, question:
 Alternative.create!(body: "alternative3", correct: false, position: 2, question: question)
 Alternative.create!(body: "alternative4", correct: false, position: 3, question: question)
 
-
-user = User.create(name: 'josé')
-Room.create(code: 'jacaré', questionaire: questionaire, owner: user)

@@ -7,7 +7,6 @@ Rails.application.routes.draw do
 
   resources :rooms
   resources :users
-  resources :rooms
 
   mount ActionCable.server => '/cable'
 end
