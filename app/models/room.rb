@@ -1,14 +1,13 @@
 class Room < ApplicationRecord
   enum state: { waiting: 0, asking_questions: 1, ending: 2 }
 
-  belongs_to :owner, class_name: 'User', foreign_key: 'owner_id'
+  belongs_to :owner, class_name: 'User', foreign_key: :owner_id
   belongs_to :questionaire
-  belongs_to :current_question, class_name: 'Question', foreign_key: 'current_question_id', optional: true 
+  belongs_to :current_question, class_name: 'Question', foreign_key: :current_question_id, optional: true 
 
-  has_many :connected_users, class_name: 'User', inverse_of: :connected_room, foreign_key: 'room_id'
+  has_many :connected_users, class_name: 'User', foreign_key: :room_id, dependent: :nullify
 
-  validates :code, presence: true
-  validates :code, uniqueness: true
+  validates :code, presence: true, uniqueness: true
 
   def questions
     questionaire.questions
