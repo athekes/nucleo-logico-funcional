@@ -7,6 +7,9 @@ class Room < ApplicationRecord
 
   has_many :connected_users, class_name: 'User', inverse_of: :connected_room, foreign_key: 'room_id'
 
+  validates :code, presence: true
+  validates :code, uniqueness: true
+
   def questions
     questionaire.questions
   end
