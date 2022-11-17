@@ -64,4 +64,6 @@ Rails.application.configure do
   config.action_cable.disable_request_forgery_protection = true
 
   config.action_cable.url = "ws://localhost:3000/cable"
+
+  config.active_job.queue_adapter = :sidekiq
 end

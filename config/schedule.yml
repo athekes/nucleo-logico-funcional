@@ -1,0 +1,9 @@
+delete_old_rooms_job:
+  cron: "20 0 * * *"
+  class: "DeleteOldRoomsJob"
+  queue: default
+
+delete_old_users_job:
+  cron: "20 0 * * *"
+  class: "DeleteOldUsersJob"
+  queue: default
