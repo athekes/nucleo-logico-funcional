@@ -11,10 +11,12 @@ module ApplicationCable
     private
 
     def find_user
-      if user = User.find(cookies[:user_uuid])
+      user = User.find(cookies[:user_uuid])
+
+      if user&.connected_room.blank?
         user
       else
-        reject_unauthorized_connection if user.blank?
+        reject_unauthorized_connection
       end
     end
   end
