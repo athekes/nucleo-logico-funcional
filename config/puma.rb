@@ -41,3 +41,28 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
+
+if Rails.env.development?
+  # Realiza o setup do Ngrok e printa o resultado 
+  begin
+    options = {
+      addr: ENV.fetch("PORT") { 3000 }
+    }
+    Ngrok::Tunnel.start(options)
+
+    box = TTY::Box.frame(
+      width: 100, height: 10, padding: 2, title: { top_left: '<NGROK>', bottom_right: '</NGROK>' },
+      style: { fg: :green, bg: :black, border: { fg: :green, bg: :black } }
+    ) do
+      "STATUS: #{Ngrok::Tunnel.status}\nPORT: #{Ngrok::Tunnel.port}\nHTTP: #{Ngrok::Tunnel.ngrok_url}\nHTTPS: #{Ngrok::Tunnel.ngrok_url_https}\n"
+    end
+  rescue => e
+    box = TTY::Box.frame(
+      width: 50, height: 5, align: :center, padding: 1, title: { top_left: '<NGROK>', bottom_right: '</NGROK>' },
+      style: { fg: :red, bg: :black, border: { fg: :red, bg: :black } }
+    ) do
+      "Impossível criar túnel com o Ngrok, erro: + #{e}"
+    end
+  end
+  Rails.logger.debug "\n#{box}\n"
+end
