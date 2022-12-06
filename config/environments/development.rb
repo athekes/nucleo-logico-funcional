@@ -66,4 +66,6 @@ Rails.application.configure do
   config.action_cable.url = "ws://localhost:3000/cable"
 
   config.active_job.queue_adapter = :sidekiq
+
+  config.hosts.clear
 end
