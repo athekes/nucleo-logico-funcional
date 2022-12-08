@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_16_115449) do
   add_foreign_key "answers", "rooms"
   add_foreign_key "answers", "users"
   add_foreign_key "questions", "questionaires"
-  add_foreign_key "questions", "rooms", column: "previous_question_id"
+  add_foreign_key "questions", "questions", column: "previous_question_id"
   add_foreign_key "rooms", "questionaires"
   add_foreign_key "rooms", "questions", column: "current_question_id"
   add_foreign_key "rooms", "users", column: "owner_id"
