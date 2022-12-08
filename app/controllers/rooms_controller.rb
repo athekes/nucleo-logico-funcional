@@ -15,8 +15,12 @@ class RoomsController < ApplicationController
 
   # POST /rooms
   def create
-    room_name = ActionController::Parameters.new({code: Room::Name::Find.call}).permit!
-    @room = Room.new(room_params.merge(room_name))
+    room_name_and_owner = ActionController::Parameters.new({
+      code: Room::Name::Find.call,
+      owner_id: cookies[:user_uuid]
+    }).permit!
+
+    @room = Room.new(room_params.merge(room_name_and_owner))
 
     if @room.save
       render json: @room, status: :created, location: @room
