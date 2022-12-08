@@ -1,5 +1,5 @@
 class RoomsController < ApplicationController
-  before_action :set_room, only: %i[ show update destroy ]
+  before_action :set_room, only: %i[ update destroy ]
 
   # GET /rooms
   def index
@@ -8,14 +8,15 @@ class RoomsController < ApplicationController
     render json: @rooms
   end
 
-  # GET /rooms/1
+  # GET /rooms/jacare
   def show
+    @room = Room.find_by(code: params[:id])
     render json: @room
   end
 
   # POST /rooms
   def create
-    room_name = ActionController::Parameters.new({code: Room::Name::Find.call}).permit!
+    room_name = ActionController::Parameters.new({code: Room::Name::Find.call, questionaire: Questionaire.first}).permit!
     @room = Room.new(room_params.merge(room_name))
 
     if @room.save
