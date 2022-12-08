@@ -23,7 +23,7 @@ class Game::Quizz
   def init_game(user:)
     return if user != room.owner
 
-    room.update!(state: :asking_questions, current_question: room.questions.first)
+    room.update!(state: :asking_questions, current_question: room.questions[0])
 
     broadcaster.send({
       room: room.code,
@@ -65,7 +65,7 @@ class Game::Quizz
   end
 
   def go_next_question
-    room.update(current_question: room.current_question.next_question)
+    room.update(current_question: room.next_question)
 
     broadcaster.send({
       question: room.current_question,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_16_115449) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_08_145906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -38,20 +38,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_16_115449) do
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
-  create_table "questionaires", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title"
+  create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "body"
-    t.uuid "questionaire_id", null: false
+  create_table "questions_rooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "question_id", null: false
+    t.uuid "room_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "previous_question_id"
-    t.index ["previous_question_id"], name: "index_questions_on_previous_question_id"
-    t.index ["questionaire_id"], name: "index_questions_on_questionaire_id"
+    t.index ["question_id"], name: "index_questions_rooms_on_question_id"
+    t.index ["room_id"], name: "index_questions_rooms_on_room_id"
   end
 
   create_table "rooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -59,12 +58,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_16_115449) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "state", default: 0
-    t.uuid "questionaire_id"
     t.uuid "current_question_id"
     t.uuid "owner_id", null: false
     t.index ["current_question_id"], name: "index_rooms_on_current_question_id"
     t.index ["owner_id"], name: "index_rooms_on_owner_id"
-    t.index ["questionaire_id"], name: "index_rooms_on_questionaire_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -80,9 +77,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_16_115449) do
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "rooms"
   add_foreign_key "answers", "users"
-  add_foreign_key "questions", "questionaires"
-  add_foreign_key "questions", "questions", column: "previous_question_id"
-  add_foreign_key "rooms", "questionaires"
+  add_foreign_key "questions_rooms", "questions"
+  add_foreign_key "questions_rooms", "rooms"
   add_foreign_key "rooms", "questions", column: "current_question_id"
   add_foreign_key "rooms", "users", column: "owner_id"
   add_foreign_key "users", "rooms"

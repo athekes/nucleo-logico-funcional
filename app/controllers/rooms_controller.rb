@@ -22,6 +22,8 @@ class RoomsController < ApplicationController
 
     @room = Room.new(room_params.merge(room_name_and_owner))
 
+    @room.questions << Question.all.sample(5)
+
     if @room.save
       render json: @room, status: :created, location: @room
     else
