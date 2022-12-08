@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   end
 
   resources :rooms
+  get 'find_room/:code', to: 'rooms#find_room'
+
   resources :users
 
   mount ActionCable.server => '/cable'

@@ -1,6 +1,13 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: %i[ show update destroy ]
 
+  # GET /find_rooms/:code
+  def find_room
+    @room = Room.find_by(code: params[:code])
+
+    render json: @room
+  end
+
   # GET /rooms
   def index
     @rooms = Room.all
