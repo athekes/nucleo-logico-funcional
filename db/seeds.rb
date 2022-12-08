@@ -15,7 +15,7 @@ Alternative.create!(body: "alternative2", correct: false, position: 1, question:
 Alternative.create!(body: "alternative3", correct: false, position: 2, question: question)
 Alternative.create!(body: "alternative4", correct: false, position: 3, question: question)
 
-question2 = Question.create!(body: "Question2", questionaire: questionaire, previous_question_id: question.id)
+question2 = Question.create!(body: "Question2", questionaire: questionaire, previous_question: question)
 
 Alternative.create!(body: "alternative1", correct: false, position: 0, question: question2)
 Alternative.create!(body: "alternative2", correct: true, position: 1, question: question2)
