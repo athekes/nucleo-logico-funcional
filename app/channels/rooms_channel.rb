@@ -16,9 +16,25 @@ class RoomsChannel < ApplicationCable::Channel
   end
 
   def register_answer(data)
-    alternative = Alternative.find(data['alternative_id'])
+    alternative_position_mapping = {
+      a: 'first_alternative',
+      A: 'first_alternative',
+      b: 'second_alternative',
+      B: 'second_alternative',
+      c: 'third_alternative',
+      C: 'third_alternative',
+      d: 'fourth_alternative',
+      D: 'fourth_alternative'
+    }.stringify_keys
 
-    current_game.register_answer(user: connection.connected_user, alternative: alternative)
+    selected_alternative_position =
+      if alternative_position_mapping.values.include?(data['alternative_position'])
+        data['alternative_position']
+      else
+        alternative_position_mapping.fetch(data['alternative_position'])
+      end
+
+    current_game.register_answer(user: connection.connected_user, alternative_position: selected_alternative_position)
   end
 
   def unsubscribed

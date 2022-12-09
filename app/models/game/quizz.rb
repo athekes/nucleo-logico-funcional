@@ -41,8 +41,10 @@ class Game::Quizz
     })
   end
 
-  def register_answer(user:, alternative:)
+  def register_answer(user:, alternative_position:)
     return unless room.asking_questions?
+
+    alternative = room.current_question.alternatives.find_by(position: alternative_position)
 
     user.answers.create!(room: room, question: room.current_question, alternative: alternative)
 
