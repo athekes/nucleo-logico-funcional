@@ -54,10 +54,28 @@ class Game::Quizz
     try_next_question
   end
 
+  def go_next_question
+    room.update(current_question: room.next_question)
+
+    broadcaster.send({
+      message_type: 'sending_question',
+      question: room.current_question,
+      alternatives: room.current_question.alternatives
+    })
+  end
+
   def show_current_scoreboard
     broadcaster.send({
       message_type: 'sending_scoreboard',
       scoreboard: room.last_scoreboard
+    })
+  end
+
+  def end_game
+    room.update(state: :ending, current_question: nil)
+
+    broadcaster.send({
+      message_type: 'end_game'
     })
   end
 
@@ -71,23 +89,5 @@ class Game::Quizz
     else
       end_game
     end
-  end
-
-  def go_next_question
-    room.update(current_question: room.next_question)
-
-    broadcaster.send({
-      message_type: 'sending_question',
-      question: room.current_question,
-      alternatives: room.current_question.alternatives
-    })
-  end
-
-  def end_game
-    room.update(state: :ending, current_question: nil)
-
-    broadcaster.send({
-      message_type: 'end_game'
-    })
   end
 end
