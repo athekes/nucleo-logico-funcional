@@ -40,7 +40,7 @@ class RoomsChannel < ApplicationCable::Channel
   def unsubscribed
     user = connection.connected_user
 
-    current_game.desconnect_from_room(user: user)
+    current_game.disconnect_from_room(user: user)
   end
 
   private
