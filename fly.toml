@@ -1,6 +1,6 @@
-# fly.toml file generated for action-cable-api on 2023-04-03T17:36:51-03:00
+# fly.toml file generated for spring-mountain-9055 on 2023-04-13T18:03:56-03:00
 
-app = "action-cable-api"
+app = "spring-mountain-9055"
 kill_signal = "SIGINT"
 kill_timeout = 5
 mounts = []
