@@ -39,8 +39,11 @@ class RoomsChannel < ApplicationCable::Channel
 
   def unsubscribed
     user = connection.connected_user
+    room = user.connected_room
 
     current_game.disconnect_from_room(user: user)
+
+    room.destroy if room.connected_users.blank?
   end
 
   private

@@ -7,6 +7,7 @@ class Room < ApplicationRecord
   has_and_belongs_to_many :questions
 
   has_many :connected_users, class_name: 'User', foreign_key: :room_id, dependent: :nullify
+  has_many :answers, dependent: :destroy
 
   validates :code, presence: true, uniqueness: true
 

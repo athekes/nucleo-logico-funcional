@@ -1,12 +1,11 @@
 class Room::Name::Find
+  class Error < StandardError; end
 
   def self.call
-    name = Room::Name::Animals::LIST.sample
+    available_codes = Room::Name::Animals::LIST - Room.select(:code).map(&:code)
 
-    while Room.where(code: name).exists?
-      name = Room::Name::Animals::LIST.sample
-    end
+    raise Error, 'No room name available' if available_codes.blank?
 
-    name
+    available_codes.sample
   end
 end

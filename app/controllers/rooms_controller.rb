@@ -36,6 +36,9 @@ class RoomsController < ApplicationController
     else
       render json: @room.errors, status: :unprocessable_entity
     end
+
+  rescue Room::Name::Find::Error => e
+    render json: e.message
   end
 
   # PATCH/PUT /rooms/1
