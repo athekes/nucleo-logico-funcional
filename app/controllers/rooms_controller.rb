@@ -38,7 +38,7 @@ class RoomsController < ApplicationController
     end
 
   rescue Room::Name::Find::Error => e
-    render json: e.message
+    render json: e.message, status: :service_unavailable
   end
 
   # PATCH/PUT /rooms/1
