@@ -16,7 +16,7 @@ class Game::Quizz
       user_count: room.connected_users.count,
       state: room.state,
       connected_user: user.name,
-      message: "Usuário #{user.name} conectou sala, #{room.connected_users.count} usuários CONECTADOS "
+      message: "Usuário #{user.name} conectou-se a sala, #{room.connected_users.count} usuários conectados "
     })
   end
 
@@ -28,7 +28,7 @@ class Game::Quizz
       user_count: room.connected_users.count,
       state: room.state,
       connected_user: user.name,
-      message: "Usuário #{user.name} desconectou da sala, #{room.connected_users.count} usuários CONECTADOS"
+      message: "Usuário #{user.name} desconectou-se da sala, #{room.connected_users.count} usuários conectados"
     })
   end
 
