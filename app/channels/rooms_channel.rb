@@ -2,9 +2,13 @@ class RoomsChannel < ApplicationCable::Channel
   def subscribed
     room = Room.find(params[:room_id])
 
-    stream_for room
-
-    current_game.enter_room(user: connection.connected_user)
+    if room.waiting?
+      stream_for room
+      current_game.enter_room(user: connection.connected_user)
+    else
+      connection.transmit identifier: params.to_json, error: "Room is not acceptin new users", code: 'unpermitted'
+      reject
+    end
   end
 
   def init_game(data)
@@ -40,14 +44,16 @@ class RoomsChannel < ApplicationCable::Channel
 
   def unsubscribed
     user = connection.connected_user
-    room = user.connected_room
+    connected_room = user.connected_room
 
-    current_game.disconnect_from_room(user: user)
+    if connected_room.present? # when a user is reject by room there is no room associated
+      current_game.disconnect_from_room(user: user)
 
-    if room.connected_users.blank?
-      room.destroy
-    else
-      current_game.try_next_question
+      if connected_room.connected_users.blank?
+        connected_room.destroy
+      else
+        current_game.try_next_question
+      end
     end
   end
 
