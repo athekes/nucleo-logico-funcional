@@ -6,7 +6,7 @@ class RoomsChannel < ApplicationCable::Channel
       stream_for room
       current_game.enter_room(user: connection.connected_user)
     else
-      connection.transmit identifier: params.to_json, error: "Room is not acceptin new users", code: 'unpermitted'
+      connection.transmit identifier: params.to_json, type: 'error', code: 'rejected', message: { message_type: 'error', message: 'Room is not accepting new users' }.to_json
       reject
     end
   end
