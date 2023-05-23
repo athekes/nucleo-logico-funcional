@@ -12,10 +12,11 @@ class Game::Quizz
     user.connect_to(room)
 
     broadcaster.send({
-      message_type: 'room_info',
+      message_type: 'user_connected',
       user_count: room.connected_users.count,
       state: room.state,
-      message: "Conectado na sala - ESTADO: #{room.state}, #{room.connected_users.count} usuários CONECTADOS "
+      connected_user: user.name,
+      message: "Usuário #{user.name} conectou sala, #{room.connected_users.count} usuários CONECTADOS "
     })
   end
 
@@ -23,9 +24,10 @@ class Game::Quizz
     user.disconnect_from_room
 
     broadcaster.send({
-      message_type: 'room_info',
+      message_type: 'user_disconnected',
       user_count: room.connected_users.count,
       state: room.state,
+      connected_user: user.name,
       message: "Usuário #{user.name} desconectou da sala, #{room.connected_users.count} usuários CONECTADOS"
     })
   end
