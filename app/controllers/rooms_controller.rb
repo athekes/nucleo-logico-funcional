@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
 
   # GET /find_rooms/:code
   def find_room
-    @room = Room.find_by(code: params[:code])
+    @room = Room.find_by(code: params[:code].downcase)
 
     render json: @room
   end
