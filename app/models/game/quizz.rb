@@ -59,8 +59,6 @@ class Game::Quizz
       message_type: 'answer_confirmation',
       message: 'Aswer registred' 
     })
-
-    try_next_question
   end
 
   def go_next_question
@@ -87,8 +85,6 @@ class Game::Quizz
       message_type: 'end_game'
     })
   end
-
-  private
 
   def try_next_question
     return unless room.current_question_all_answered?

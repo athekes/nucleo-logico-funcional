@@ -35,6 +35,7 @@ class RoomsChannel < ApplicationCable::Channel
       end
 
     current_game.register_answer(user: connection.connected_user, alternative_position: selected_alternative_position)
+    current_game.try_next_question
   end
 
   def unsubscribed
@@ -43,7 +44,11 @@ class RoomsChannel < ApplicationCable::Channel
 
     current_game.disconnect_from_room(user: user)
 
-    room.destroy if room.connected_users.blank?
+    if room.connected_users.blank?
+      room.destroy
+    else
+      current_game.try_next_question
+    end
   end
 
   private
