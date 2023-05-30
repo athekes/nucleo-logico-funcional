@@ -9,8 +9,9 @@ module ApplicationCable
 
     periodically every: CONNECTION_PING_INTERVAL do
       @driver&.ping
+
       if Time.now - @_last_request_at > @_timeout
-        connection.disconnect
+        unsubscribed
       end
     end
 
