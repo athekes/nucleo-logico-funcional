@@ -56,7 +56,7 @@ class RoomsChannel < ApplicationCable::Channel
       end
     end
 
-    ActionCable.server.remote_connections.where(connected_user: connected_user).disconnect
+    connection.disconnect
   end
 
   private
