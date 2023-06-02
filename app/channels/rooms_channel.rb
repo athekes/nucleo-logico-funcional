@@ -55,6 +55,8 @@ class RoomsChannel < ApplicationCable::Channel
         current_game.try_next_question
       end
     end
+
+    ActionCable.server.remote_connections.where(connected_user: connected_user).disconnect
   end
 
   private

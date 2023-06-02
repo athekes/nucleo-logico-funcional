@@ -8,6 +8,10 @@ module ApplicationCable
       self.connected_user = find_user
     end
 
+    def disconnect
+      ActionCable.server.remote_connections.where(connected_user: connected_user).disconnect
+    end
+
     private
 
     def find_user
